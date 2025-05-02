@@ -1,1 +1,2 @@
 console.log("this is first console");
+console.log("this is second console");
