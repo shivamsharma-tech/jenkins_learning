@@ -6,8 +6,10 @@ pipeline {
             steps {
                 sshagent(credentials: ['Shivam-Sharma']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@13.50.238.235 "echo Connected!"
-                        scp -o StrictHostKeyChecking=no my_script.sh ubuntu@13.50.238.235:/home/ubuntu/
+                        ssh -o StrictHostKeyChecking=no ubuntu@13.50.238.235 "
+                            echo Connected to EC2;
+                            sudo apt update && sudo apt install nginx -y
+                        "
                     '''
                 }
             }
