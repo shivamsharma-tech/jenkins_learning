@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/shivamsharma-tech/jenkins_learning'
+                git branch: 'main', url: 'https://github.com/shivamsharma-tech/jenkins_learning'
             }
         }
 
