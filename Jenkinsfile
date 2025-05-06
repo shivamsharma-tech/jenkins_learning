@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+
+    environment {
+        NODE_ENV = 'production'
+        EC2_USER = 'ubuntu'
+        EC2_HOST = '16.16.166.108'
+        EC2_DIR = '/home/ubuntu/myapp'
+        KEY_CRED_ID = 'ec2-key' // ID of SSH private key in Jenkins Credentials
+    }
+
+    tools {
+        nodejs 'Node 18' // Match the name set in Global Tool Configuration
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/shivamsharma-tech/jenkins_learning'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Build (Optional)') {
+            when {
+                expression { fileExists('build') }
+            }
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                sshagent (credentials: ["${KEY_CRED_ID}"]) {
+                    sh """
+                    scp -o StrictHostKeyChecking=no app.js ${EC2_USER}@${EC2_HOST}:${EC2_DIR}
+                    ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << EOF
+                        cd ${EC2_DIR}
+                        pm2 restart myapp || pm2 start app.js --name myapp
+                    EOF
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Deployment succeeded!'
+        }
+        failure {
+            echo '❌ Deployment failed!'
+        }
+    }
+}
