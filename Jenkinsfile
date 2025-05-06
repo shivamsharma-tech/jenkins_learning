@@ -9,9 +9,9 @@ pipeline {
         KEY_CRED_ID = 'ec2-key' // ID of SSH private key in Jenkins Credentials
     }
 
-    tools {
-        nodejs 'Node 18' // Match the name set in Global Tool Configuration
-    }
+    // tools {
+        // nodejs 'Node 18' // Match the name set in Global Tool Configuration
+    // }
 
     stages {
         stage('Clone Repository') {
