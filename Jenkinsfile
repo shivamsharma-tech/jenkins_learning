@@ -1,62 +1,35 @@
 pipeline {
     agent any
 
-    environment {
-        NODE_ENV = 'production'
-        EC2_USER = 'ubuntu'
-        EC2_HOST = '16.16.166.108'
-        EC2_DIR = '/home/ubuntu/myapp'
-        KEY_CRED_ID = 'ubuntu' // ID of SSH private key in Jenkins Credentials
-    }
-
-    tools {
-        nodejs 'Node 18' // Match the name set in Global Tool Configuration
-    }
-
     stages {
-        stage('Clone Repository') {
+        stage('Build Docker Image') {
             steps {
-                git branch: 'main', url: 'https://github.com/shivamsharma-tech/jenkins_learning'
+                script {
+                    dockerImage = docker.build("multi-app")
+                }
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Stop Old Containers') {
             steps {
-                sh 'npm install'
+                script {
+                    def ports = [3000, 3001, 3002]
+                    for (p in ports) {
+                        sh "docker rm -f app-${p} || true"
+                    }
+                }
             }
         }
 
-        stage('Build (Optional)') {
-            when {
-                expression { fileExists('build') }
-            }
+        stage('Run on Multiple Ports') {
             steps {
-                sh 'npm run build'
+                script {
+                    def ports = [3000, 3001, 3002]
+                    for (p in ports) {
+                        sh "docker run -d -p ${p}:3000 --name app-${p} multi-app"
+                    }
+                }
             }
-        }
-
-        stage('Deploy to EC2') {
-    steps {
-        sshagent (credentials: ["${KEY_CRED_ID}"]) {
-            sh '''
-scp -o StrictHostKeyChecking=no app.js ${EC2_USER}@${EC2_HOST}:${EC2_DIR}
-ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << EOF
-cd ${EC2_DIR}
-pm2 restart myapp || pm2 start app.js --name myapp
-sudo fuser -k 3000/tcp || true
-EOF
-            '''
-        }
-    }
-}
-    }
-
-    post {
-        success {
-            echo '✅ Deployment succeeded!'
-        }
-        failure {
-            echo '❌ Deployment failed!'
         }
     }
 }
