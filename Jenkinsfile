@@ -43,6 +43,7 @@ scp -o StrictHostKeyChecking=no app.js ${EC2_USER}@${EC2_HOST}:${EC2_DIR}
 ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << EOF
 cd ${EC2_DIR}
 pm2 restart myapp || pm2 start app.js --name myapp
+sudo fuser -k 3000/tcp || true
 EOF
             '''
         }
