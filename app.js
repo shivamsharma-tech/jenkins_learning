@@ -3,7 +3,7 @@ const app = express()
 const port = 3000
 
 app.get('/', (req, res) => {
-  res.send('hello users this page comes from pipeline')
+  res.send('hello users this page or text comes from pipeline')
 })
 
 app.get('/home', (req, res) => {
