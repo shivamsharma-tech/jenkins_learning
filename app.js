@@ -3,7 +3,7 @@ const app = express()
 const port = 3000
 
 app.get('/', (req, res) => {
-  res.send('Hello this is deployed file comes from local system and hosted on aws with the help of git and jenkins. lets continue the process')
+  res.send('Hello this is deployed file comes from local system and hosted on aws with the help of git and jenkins. lets continue the process pipeline')
 })
 
 app.get('/home', (req, res) => {
@@ -14,6 +14,6 @@ app.get('/aabout', (req, res) => {
   res.send('This is About Page for knowldge about our site')
 })
 
-app.listen(port, () => {
+app.listen(port,'0.0.0.0' ,() => {
   console.log(`Example app listening on port ${port}`)
 })
