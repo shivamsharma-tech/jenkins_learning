@@ -3,7 +3,7 @@ const app = express()
 const port = 3000
 
 app.get('/', (req, res) => {
-  res.send('Hello Imran you are great developer of backend')
+  res.send('Or tarif krni h kya . tarif krvane ke 1000 lagenge btao ?')
 })
 
 app.get('/home', (req, res) => {
