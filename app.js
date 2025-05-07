@@ -3,7 +3,7 @@ const app = express()
 const port = 3000
 
 app.get('/', (req, res) => {
-  res.send('Or tarif krni h kya . tarif krvane ke 1000 lagenge btao ?    whyb are u not speak')
+  res.send('rate fix h isse niche nhi ho payega nhi aap rhene do')
 })
 
 app.get('/home', (req, res) => {
