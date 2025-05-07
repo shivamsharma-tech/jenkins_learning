@@ -38,16 +38,17 @@ pipeline {
        stage('Deploy to EC2') {
     steps {
         sshagent (credentials: ["${KEY_CRED_ID}"]) {
-            sh """
-            scp -o StrictHostKeyChecking=no app.js ${EC2_USER}@${EC2_HOST}:${EC2_DIR}
-            ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << 'EOF'
-                cd ${EC2_DIR}
-                pm2 restart myapp || pm2 start app.js --name myapp
-            EOF
+            sh '''
+scp -o StrictHostKeyChecking=no app.js ${EC2_USER}@${EC2_HOST}:${EC2_DIR}
+ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << EOF
+cd ${EC2_DIR}
+pm2 restart myapp || pm2 start app.js --name myapp
+EOF
             '''
         }
     }
 }
+
 
     }
 
