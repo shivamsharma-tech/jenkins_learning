@@ -6,7 +6,7 @@ pipeline {
         EC2_USER = 'ubuntu'
         EC2_HOST = '16.16.166.108'
         EC2_DIR = '/home/ubuntu/myapp'
-        KEY_CRED_ID = 'Shivam-Sharma' // ID of SSH private key in Jenkins Credentials
+        KEY_CRED_ID = 'ubuntu' // ID of SSH private key in Jenkins Credentials
     }
 
     tools {
