@@ -35,21 +35,20 @@ pipeline {
             }
         }
 
-        stage('Deploy to EC2') {
-            steps {
-                sshagent (credentials: ["${KEY_CRED_ID}"]) {
-                    sh """
-                    sh '''
-  scp -o StrictHostKeyChecking=no app.j ubuntu@16.16.166.108:/home/ubuntu/myapp
-  ssh -o StrictHostKeyChecking=no ubuntu@16.16.166.108 << 'EOF'
-    cd /home/ubuntu/myapp
-    pm2 restart myapp || pm2 start app.js --name myapp
-  EOF
-'''
-
-                }
-            }
+       stage('Deploy to EC2') {
+    steps {
+        sshagent (credentials: ["${KEY_CRED_ID}"]) {
+            sh """
+            scp -o StrictHostKeyChecking=no app.js ${EC2_USER}@${EC2_HOST}:${EC2_DIR}
+            ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << 'EOF'
+                cd ${EC2_DIR}
+                pm2 restart myapp || pm2 start app.js --name myapp
+            EOF
+            """
         }
+    }
+}
+
     }
 
     post {
