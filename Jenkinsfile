@@ -44,7 +44,7 @@ pipeline {
                 cd ${EC2_DIR}
                 pm2 restart myapp || pm2 start app.js --name myapp
             EOF
-            """
+            '''
         }
     }
 }
